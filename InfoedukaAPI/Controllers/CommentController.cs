@@ -10,25 +10,25 @@ namespace InfoedukaAPI.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly IConfiguration _configuration;
 
-        public CommentController(IConfiguration config)
+        public CommentController(IConfiguration configuration)
         {
-            _config = config;
+            _configuration = configuration;
         }
 
         [HttpGet]
         public async Task<ActionResult<IList<vComment>>> GetAll()
         {
-            using var conn = new SqlConnection(_config.GetConnectionString("InfoedukaDB"));
-            var comments = await conn.QueryAsync<vComment>("SELECT * FROM dbo.vComment");
-            return Ok(comments);
+            using var conn = new SqlConnection(_configuration.GetConnectionString("InfoedukaDB"));
+            var response = await conn.QueryAsync<vComment>("SELECT * FROM dbo.vComment");
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostComment(int appuser, string title, string content, DateTime? endDate, int isActive, int userid, int classid)
+        public async Task<ActionResult> CreateComment(int appuser, string title, string content, DateTime? endDate, int isActive, int userid, int classid)
         {
-            using var conn = new SqlConnection(_config.GetConnectionString("InfoedukaDB"));
+            using var conn = new SqlConnection(_configuration.GetConnectionString("InfoedukaDB"));
             var sqlparam = new
             {
                 AppUserID = appuser,
@@ -57,7 +57,7 @@ namespace InfoedukaAPI.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteComment(int appuser, int commentId)
         {
-            using var conn = new SqlConnection(_config.GetConnectionString("InfoedukaDB"));
+            using var conn = new SqlConnection(_configuration.GetConnectionString("InfoedukaDB"));
             var sqlparam = new
             {
                 AppUserID = appuser,
@@ -81,7 +81,7 @@ namespace InfoedukaAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateComment(int commentId, int appuser, string title, string content, DateTime? endDate, int isActive, int userid, int classid)
         {
-            using var conn = new SqlConnection(_config.GetConnectionString("InfoedukaDB"));
+            using var conn = new SqlConnection(_configuration.GetConnectionString("InfoedukaDB"));
             var sqlparam = new
             {
                 CommentID = commentId,

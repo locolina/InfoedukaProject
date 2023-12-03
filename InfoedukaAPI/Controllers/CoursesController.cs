@@ -21,9 +21,9 @@ namespace InfoedukaAPI.Controllers
         public async Task<ActionResult<IList<Course>>> GetAll(int userId)
         {
             using var conn = new SqlConnection(_configuration.GetConnectionString("InfoedukaDB"));
-            var courses = 
+            var response = 
                 await conn.QueryAsync<Course>("exec dbo.spClassCmb @UserID=@UserID", new{ userID = userId});
-            return Ok(courses);
+            return Ok(response);
         }
         
         [HttpPost]

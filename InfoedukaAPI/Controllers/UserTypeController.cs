@@ -21,10 +21,10 @@ namespace InfoedukaAPI.Controllers
         public async Task<ActionResult<IList<UserType>>> GetAll(int userId)
         {
             using var conn = new SqlConnection(_configuration.GetConnectionString("InfoedukaDB"));
-            var courses = 
+            var response = 
                 await conn.QueryAsync<UserType>("exec dbo.spUserTypeCmb @AppUserID=@AppUserID", 
                     new{ AppUserID = userId});
-            return Ok(courses);
+            return Ok(response);
         }
     }
 }
