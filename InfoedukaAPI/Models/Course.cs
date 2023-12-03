@@ -1,8 +1,9 @@
-namespace InfoedukaAPI.Models;
-
-public class Course
+namespace InfoedukaAPI.Models
 {
-    public int CourseID { get; set; }
-    public string CourseName { get; set; }
-    public int IsActive { get; set; }
+    public class Course
+    {
+        public int ClassID { get; set; }
+        public string? ClassName { get; set; }
+        public int IsActive { get; set; }
+    }
 }

@@ -55,13 +55,13 @@ namespace InfoedukaAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteComment(int appuser, int commentID)
+        public async Task<ActionResult> DeleteComment(int appuser, int commentId)
         {
             using var conn = new SqlConnection(_config.GetConnectionString("InfoedukaDB"));
             var sqlparam = new
             {
                 AppUserID = appuser,
-                CommentID = commentID
+                CommentID = commentId
             };
 
             var sqlexec = "exec dbo.spCommentD @AppUserID=@AppUserID,@CommentID=@CommentID";
@@ -79,12 +79,12 @@ namespace InfoedukaAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateComment(int commentID, int appuser, string title, string content, DateTime? endDate, int isActive, int userid, int classid)
+        public async Task<ActionResult> UpdateComment(int commentId, int appuser, string title, string content, DateTime? endDate, int isActive, int userid, int classid)
         {
             using var conn = new SqlConnection(_config.GetConnectionString("InfoedukaDB"));
             var sqlparam = new
             {
-                CommentID = commentID,
+                CommentID = commentId,
                 AppUserID = appuser,
                 Title = title,
                 Content = content,
