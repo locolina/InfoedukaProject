@@ -55,10 +55,11 @@
                 @Html.DisplayFor(modelItem => item.IsActive)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Class.ClassId)
+                @Html.DisplayFor(modelItem => item.Class.ClassName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserId)
+                @Html.DisplayFor(modelItem => item.User.FirstName)
+                @Html.DisplayFor(modelItem => item.User.LastName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CommentId">Edit</a> |
