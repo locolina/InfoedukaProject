@@ -18,6 +18,8 @@ namespace InfoedukaMVC.Controllers
             _context = context;
         }
 
+        //TODO: KOD GETOVA TREBA VRACATI SAMO OBJAVE OD TRENUTNO PRIJAVLJENOG KORISNIKA, OSIM ZA ADMINA ONDA VRACAMO SVE
+        
         // GET: Comments
         public async Task<IActionResult> Index()
         {
@@ -26,30 +28,32 @@ namespace InfoedukaMVC.Controllers
         }
 
         // GET: Comments/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Comments == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comments
-                .Include(c => c.Class)
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.CommentId == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return View(comment);
-        }
+        //TODO: PROVJERITI MISLIM DA JE ZA OVAJ APP NEPOTREBAN KOMAD KODA
+        // public async Task<IActionResult> Details(int? id)
+        // {
+        //     if (id == null || _context.Comments == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //
+        //     var comment = await _context.Comments
+        //         .Include(c => c.Class)
+        //         .Include(c => c.User)
+        //         .FirstOrDefaultAsync(m => m.CommentId == id);
+        //     if (comment == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //
+        //     return View(comment);
+        // }
 
         // GET: Comments/Create
         public IActionResult Create()
         {
-            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId");
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserId");
+            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassName");
+            //TODO: KORISNIKA TREBA IZVUCI IS SESSIONA A NE GA RUCNO KUCATI KADA SE KREIRA NOVI KOMENTAR
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserId"); 
             return View();
         }
 
