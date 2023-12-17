@@ -27,3 +27,9 @@ header{
     top: 0;
     z-index: 1000;
 }
+
+.dropdown-toggle{
+    background-color: transparent;
+    border-color: transparent;
+    color: #212592;
+}

@@ -7,80 +7,79 @@
 <div class="card">
     <div class="card-header">
         <h3>Posts</h3>
-        <button asp-action="Create" type="button" class="btn btn-primary">
-            Create New
-        </button>
+        <a asp-action="Create" class="btn btn-primary" role="button">Create New</a>
     </div>
     <div class="card-body">
-    
+
         <table class="table table-striped">
             <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Content)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DatePosted)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateExpires)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsActive)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Class)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.User)
-                </th>
-                <th></th>
-            </tr>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Content)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DatePosted)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateExpires)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Class)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.User)
+                    </th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
-            @foreach (var item in Model) {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Content)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DatePosted)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateExpires)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsActive)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Class.ClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.User.FirstName)
-                        @Html.DisplayFor(modelItem => item.User.LastName)
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                ...
-                            </a>
-                      
-                            <ul class="dropdown-menu">
-                                <li><a asp-action="Edit" asp-route-id="@item.CommentId" class="dropdown-item">Edit</a></li>
-                                <li><a asp-action="Delete" asp-route-id="@item.CommentId" class="dropdown-item">Delete</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Content)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DatePosted)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateExpires)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Class.ClassName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.FirstName)
+                            @Html.DisplayFor(modelItem => item.User.LastName)
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ...
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li><a asp-action="Edit" asp-route-id="@item.CommentId" class="dropdown-item">Edit</a></li>
+                                    <li><a asp-action="Delete" asp-route-id="@item.CommentId" class="dropdown-item">Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
-      
+
     </div>
 </div>
