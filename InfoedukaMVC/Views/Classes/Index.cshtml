@@ -1,14 +1,16 @@
 ﻿@model IEnumerable<InfoedukaMVC.Models.Class>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Classes";
 }
 
-<h1>Index</h1>
+<div class="card">
+        <div class="card-header">
+            <h3>Classes</h3>
+                <a asp-action="Create" class="btn btn-primary" role="button">Create New</a>
+        </div>
+            <div class="card-body">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -31,11 +33,22 @@
                 @Html.DisplayFor(modelItem => item.IsActive)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ClassId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ClassId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ClassId">Delete</a>
+                <div class="dropdown">
+                     <a class="btn btn-secondary dropdown-toggle" 
+                     href="#" role="button" data-bs-toggle="dropdown" a
+                     ria-expanded="false">...</a>
+                    
+                     <ul class="dropdown-menu">
+                         <li><a asp-action="Edit" asp-route-id="@item.ClassId" 
+                             class="dropdown-item">Edit</a></li>
+                         <li><a asp-action="Delete" asp-route-id="@item.ClassId" 
+                             class="dropdown-item">Delete</a></li>
+                     </ul>
+                </div>
             </td>
         </tr>
 }
     </tbody>
 </table>
+        </div>
+</div>
