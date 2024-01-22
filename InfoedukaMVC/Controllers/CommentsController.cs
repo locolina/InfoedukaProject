@@ -53,7 +53,7 @@ namespace InfoedukaMVC.Controllers
         {
             ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassName");
             //TODO: KORISNIKA TREBA IZVUCI IS SESSIONA A NE GA RUCNO KUCATI KADA SE KREIRA NOVI KOMENTAR
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserId"); 
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserName"); 
             return View();
         }
 
@@ -101,8 +101,9 @@ namespace InfoedukaMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CommentId,Title,Content,DatePosted,DateExpires,IsActive,UserId,ClassId")] Comment comment)
+        public async Task<IActionResult> Edit(int id, [Bind("CommentId,Title,Content,DatePosted,DateExpires,IsActive,UserId,ClassId")] BLComment comment)
         {
+            var dbComment = MappingComment.MapToDAL(comment);
             if (id != comment.CommentId)
             {
                 return NotFound();
@@ -130,7 +131,8 @@ namespace InfoedukaMVC.Controllers
             }
             ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId", comment.ClassId);
             ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserId", comment.UserId);
-            return View(comment);
+            var blComment = MappingComment.MapToBL(dbComment);
+            return View(blComment);
         }
 
         // GET: Comments/Delete/5
