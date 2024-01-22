@@ -18,8 +18,23 @@ namespace InfoedukaMVC.Controllers
 
         public async Task<IActionResult> IndexAsync()
         {
-            var lcolinaDbContext = _context.Comments.Include(c => c.Class).Include(c => c.User);
-            return View(await lcolinaDbContext.ToListAsync());
+            var comments = _context.Comments.Include(c => c.Class).Include(c => c.User);
+            await comments.ToListAsync();
+            IList<Comment> activeComments = new List<Comment>();
+            foreach (var comment in comments)
+            {
+                if (comment.IsActive == true)
+                {
+                    activeComments.Add(comment);
+                }
+
+
+
+            }
+
+
+
+            return View(activeComments);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -47,7 +47,7 @@ namespace InfoedukaMVC.Controllers
         // GET: AppUsers/Create
         public IActionResult Create()
         {
-            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "UserTypeId", "UserTypeId");
+            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "UserTypeId", "UserTypeName");
             return View();
         }
 
@@ -56,8 +56,11 @@ namespace InfoedukaMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,UserName,Pass,UserTypeId,IsActive")] AppUser appUser)
+        public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,UserName,Pass,UserTypeId,IsActive")] BLAppUser appUser)
         {
+            var user = MappingAppUser.MapToDAL(appUser);
+            var type = _context.UserTypes.FirstOrDefault(x => x.UserTypeId == user.UserTypeId);
+            user.UserType = type;
             if (ModelState.IsValid)
             {
                 _context.Add(appUser);
@@ -90,8 +93,9 @@ namespace InfoedukaMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,FirstName,LastName,UserName,Pass,UserTypeId,IsActive")] AppUser appUser)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,FirstName,LastName,UserName,Pass,UserTypeId,IsActive")] BLAppUser appUser)
         {
+            var dbAppUser = MappingAppUser.MapToDAL(appUser);
             if (id != appUser.UserId)
             {
                 return NotFound();
@@ -101,12 +105,12 @@ namespace InfoedukaMVC.Controllers
             {
                 try
                 {
-                    _context.Update(appUser);
+                    _context.Update(dbAppUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AppUserExists(appUser.UserId))
+                    if (!AppUserExists(dbAppUser.UserId))
                     {
                         return NotFound();
                     }
@@ -118,7 +122,8 @@ namespace InfoedukaMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "UserTypeId", "UserTypeId", appUser.UserTypeId);
-            return View(appUser);
+            var blUser = MappingAppUser.MapToBL(dbAppUser);
+            return View(blUser);
         }
 
         // GET: AppUsers/Delete/5

@@ -6,7 +6,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3>Posts</h3>
+        <h3>Users</h3>
         <a asp-action="Create" class="btn btn-primary" role="button">Create New</a>
     </div>
     <div class="card-body">
@@ -36,40 +36,41 @@
                 </tr>
             </thead>
             <tbody>
-        @foreach (var item in Model) {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Pass)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsActive)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserType.UserTypeName)
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                ...
-                            </a>
-                    
-                            <ul class="dropdown-menu">
-                                <li><a asp-action="Edit" asp-route-id="@item.UserId" class="dropdown-item">Edit</a></li>
-                                <li><a asp-action="Delete" asp-route-id="@item.UserId" class="dropdown-item">Delete</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-        }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Pass)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserType.UserTypeName)
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ...
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li><a asp-action="Edit" asp-route-id="@item.UserId" class="dropdown-item">Edit</a></li>
+                                    <li><a asp-action="Delete" asp-route-id="@item.UserId" class="dropdown-item">Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
