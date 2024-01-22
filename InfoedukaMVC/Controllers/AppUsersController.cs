@@ -25,24 +25,24 @@ namespace InfoedukaMVC.Controllers
             return View(await lcolinaDbContext.ToListAsync());
         }
 
-        // GET: AppUsers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.AppUsers == null)
-            {
-                return NotFound();
-            }
+        //// GET: AppUsers/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null || _context.AppUsers == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var appUser = await _context.AppUsers
-                .Include(a => a.UserType)
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (appUser == null)
-            {
-                return NotFound();
-            }
+        //    var appUser = await _context.AppUsers
+        //        .Include(a => a.UserType)
+        //        .FirstOrDefaultAsync(m => m.UserId == id);
+        //    if (appUser == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(appUser);
-        }
+        //    return View(appUser);
+        //}
 
         // GET: AppUsers/Create
         public IActionResult Create()
@@ -84,7 +84,7 @@ namespace InfoedukaMVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "UserTypeId", "UserTypeId", appUser.UserTypeId);
+            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "UserTypeId", "UserTypeName", appUser.UserTypeId);
             return View(appUser);
         }
 

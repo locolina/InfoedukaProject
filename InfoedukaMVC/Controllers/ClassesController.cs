@@ -26,23 +26,23 @@ namespace InfoedukaMVC.Controllers
                           Problem("Entity set 'LcolinaDbContext.Classes'  is null.");
         }
 
-        // GET: Classes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Classes == null)
-            {
-                return NotFound();
-            }
+        //// GET: Classes/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null || _context.Classes == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var @class = await _context.Classes
-                .FirstOrDefaultAsync(m => m.ClassId == id);
-            if (@class == null)
-            {
-                return NotFound();
-            }
+        //    var @class = await _context.Classes
+        //        .FirstOrDefaultAsync(m => m.ClassId == id);
+        //    if (@class == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(@class);
-        }
+        //    return View(@class);
+        //}
 
         // GET: Classes/Create
         public IActionResult Create()
