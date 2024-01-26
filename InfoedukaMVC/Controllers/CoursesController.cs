@@ -9,87 +9,69 @@ using InfoedukaMVC.Models;
 
 namespace InfoedukaMVC.Controllers
 {
-    public class UserTypesController : Controller
+    public class CoursesController : Controller
     {
         private readonly LcolinaDbContext _context;
 
-        public UserTypesController(LcolinaDbContext context)
+        public CoursesController(LcolinaDbContext context)
         {
             _context = context;
         }
 
-        // GET: UserTypes
+        // GET: Courses
         public async Task<IActionResult> Index()
         {
-              return _context.UserTypes != null ? 
-                          View(await _context.UserTypes.ToListAsync()) :
-                          Problem("Entity set 'LcolinaDbContext.UserTypes'  is null.");
+              return _context.Courses != null ? 
+                          View(await _context.Courses.ToListAsync()) :
+                          Problem("Entity set 'LcolinaDbContext.Courses'  is null.");
         }
 
-        // GET: UserTypes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.UserTypes == null)
-            {
-                return NotFound();
-            }
-
-            var userType = await _context.UserTypes
-                .FirstOrDefaultAsync(m => m.UserTypeId == id);
-            if (userType == null)
-            {
-                return NotFound();
-            }
-
-            return View(userType);
-        }
-
-        // GET: UserTypes/Create
+        // GET: Courses/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: UserTypes/Create
+        // POST: Courses/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserTypeId,UserTypeName")] UserType userType)
+        public async Task<IActionResult> Create([Bind("ClassId,ClassName,IsActive")] Course course)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userType);
+                _context.Add(course);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(userType);
+            return View(course);
         }
 
-        // GET: UserTypes/Edit/5
+        // GET: Courses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.UserTypes == null)
+            if (id == null || _context.Courses == null)
             {
                 return NotFound();
             }
 
-            var userType = await _context.UserTypes.FindAsync(id);
-            if (userType == null)
+            var course = await _context.Courses.FindAsync(id);
+            if (course == null)
             {
                 return NotFound();
             }
-            return View(userType);
+            return View(course);
         }
 
-        // POST: UserTypes/Edit/5
+        // POST: Courses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserTypeId,UserTypeName")] UserType userType)
+        public async Task<IActionResult> Edit(int id, [Bind("ClassId,ClassName,IsActive")] Course course)
         {
-            if (id != userType.UserTypeId)
+            if (id != course.CourseId)
             {
                 return NotFound();
             }
@@ -98,12 +80,12 @@ namespace InfoedukaMVC.Controllers
             {
                 try
                 {
-                    _context.Update(userType);
+                    _context.Update(course);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserTypeExists(userType.UserTypeId))
+                    if (!ClassExists(course.CourseId))
                     {
                         return NotFound();
                     }
@@ -114,49 +96,49 @@ namespace InfoedukaMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(userType);
+            return View(course);
         }
 
-        // GET: UserTypes/Delete/5
+        // GET: Courses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.UserTypes == null)
+            if (id == null || _context.Courses == null)
             {
                 return NotFound();
             }
 
-            var userType = await _context.UserTypes
-                .FirstOrDefaultAsync(m => m.UserTypeId == id);
-            if (userType == null)
+            var @class = await _context.Courses
+                .FirstOrDefaultAsync(m => m.CourseId == id);
+            if (@class == null)
             {
                 return NotFound();
             }
 
-            return View(userType);
+            return View(@class);
         }
 
-        // POST: UserTypes/Delete/5
+        // POST: Courses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.UserTypes == null)
+            if (_context.Courses == null)
             {
-                return Problem("Entity set 'LcolinaDbContext.UserTypes'  is null.");
+                return Problem("Entity set 'LcolinaDbContext.Courses'  is null.");
             }
-            var userType = await _context.UserTypes.FindAsync(id);
-            if (userType != null)
+            var @class = await _context.Courses.FindAsync(id);
+            if (@class != null)
             {
-                _context.UserTypes.Remove(userType);
+                _context.Courses.Remove(@class);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserTypeExists(int id)
+        private bool ClassExists(int id)
         {
-          return (_context.UserTypes?.Any(e => e.UserTypeId == id)).GetValueOrDefault();
+          return (_context.Courses?.Any(e => e.CourseId == id)).GetValueOrDefault();
         }
     }
 }
