@@ -1,0 +1,7 @@
+﻿body {
+}
+
+.card-header {
+    display: inline-flex;
+    justify-content: space-between;
+}

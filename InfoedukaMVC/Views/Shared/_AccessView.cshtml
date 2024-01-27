@@ -1,0 +1,25 @@
+﻿@{
+    var type = Context.Session.GetInt32("UserTypeId");
+}
+
+@if (type == 1)
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Comments" asp-action="Index">Posts</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="AppUsers" asp-action="Index">Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+    </li>
+}
+else if (type == 2)
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Comments" asp-action="Index">Posts</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+    </li>
+}
