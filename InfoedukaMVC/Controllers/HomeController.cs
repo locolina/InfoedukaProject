@@ -1,4 +1,5 @@
 ﻿using InfoedukaMVC.Models;
+using InfoedukaMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -7,18 +8,18 @@ namespace InfoedukaMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly LcolinaDbContext _context;
+        private readonly AuthService _authService;
 
-        public HomeController(ILogger<HomeController> logger, LcolinaDbContext context)
+        public HomeController(LcolinaDbContext context, AuthService authService)
         {
-            _logger = logger;
             _context = context;
+            _authService = authService;
         }
 
         public async Task<IActionResult> IndexAsync()
         {
-            var comments = _context.Comments.Include(c => c.Class).Include(c => c.User);
+            var comments = _context.Comments.Include(c => c.Course).Include(c => c.User);
             await comments.ToListAsync();
             IList<Comment> activeComments = new List<Comment>();
             foreach (var comment in comments)

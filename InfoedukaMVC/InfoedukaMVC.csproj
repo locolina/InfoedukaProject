@@ -32,4 +32,12 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\UserTypes\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\UserTypes\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\UserTypes\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\UserTypes\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\UserTypes\Index.cshtml" />
+  </ItemGroup>
+
 </Project>

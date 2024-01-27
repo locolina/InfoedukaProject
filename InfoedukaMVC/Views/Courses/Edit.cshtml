@@ -1,4 +1,4 @@
-﻿@model InfoedukaMVC.Models.Class
+﻿@model InfoedukaMVC.Models.Course
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,11 +13,11 @@
             <div class="col">
                 <form asp-action="Edit">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="ClassId" />
+                    <input type="hidden" asp-for="CourseId" />
                     <div class="form-group">
-                        <label asp-for="ClassName" class="control-label"></label>
-                        <input asp-for="ClassName" class="form-control" />
-                        <span asp-validation-for="ClassName" class="text-danger"></span>
+                        <label asp-for="CourseName" class="control-label"></label>
+                        <input asp-for="CourseName" class="form-control" />
+                        <span asp-validation-for="CourseName" class="text-danger"></span>
                     </div>
                     <div class="form-group form-check">
                         <label class="form-check-label">

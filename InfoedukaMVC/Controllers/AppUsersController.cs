@@ -2,20 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InfoedukaMVC.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InfoedukaMVC.Models;
+using InfoedukaMVC.Models.DTO;
+using InfoedukaMVC.Services;
 
 namespace InfoedukaMVC.Controllers
 {
     public class AppUsersController : Controller
     {
         private readonly LcolinaDbContext _context;
+        private readonly AuthService _authService;
 
-        public AppUsersController(LcolinaDbContext context)
+        public AppUsersController(LcolinaDbContext context, AuthService authService)
         {
             _context = context;
+            _authService = authService;
+            IsUserLoggedIn();
+        }
+
+        private void IsUserLoggedIn()
+        {
+            ViewBag.SharedData = _authService.IsUserAuthenticated();
         }
 
         // GET: AppUsers
@@ -25,25 +36,6 @@ namespace InfoedukaMVC.Controllers
             return View(await lcolinaDbContext.ToListAsync());
         }
 
-        //// GET: AppUsers/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null || _context.AppUsers == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var appUser = await _context.AppUsers
-        //        .Include(a => a.UserType)
-        //        .FirstOrDefaultAsync(m => m.UserId == id);
-        //    if (appUser == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(appUser);
-        //}
-
         // GET: AppUsers/Create
         public IActionResult Create()
         {
@@ -52,23 +44,19 @@ namespace InfoedukaMVC.Controllers
         }
 
         // POST: AppUsers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,UserName,Pass,UserTypeId,IsActive")] BLAppUser appUser)
+        public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,UserName,Pass,UserTypeId,IsActive")] AppUserDTO appUserDto)
         {
-            var user = MappingAppUser.MapToDAL(appUser);
+            var user = AppUserMapper.MapToDAL(appUserDto);
             var type = _context.UserTypes.FirstOrDefault(x => x.UserTypeId == user.UserTypeId);
-            user.UserType = type;
+            user.UserTypeId = type.UserTypeId;
             if (ModelState.IsValid)
             {
-                _context.Add(appUser);
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "UserTypeId", "UserTypeId", appUser.UserTypeId);
-            return View(appUser);
+            return View(user);
         }
 
         // GET: AppUsers/Edit/5
@@ -89,13 +77,10 @@ namespace InfoedukaMVC.Controllers
         }
 
         // POST: AppUsers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,FirstName,LastName,UserName,Pass,UserTypeId,IsActive")] BLAppUser appUser)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,FirstName,LastName,UserName,Pass,UserTypeId,IsActive")] AppUserDTO appUser)
         {
-            var dbAppUser = MappingAppUser.MapToDAL(appUser);
+            var dbAppUser = AppUserMapper.MapToDAL(appUser);
             if (id != appUser.UserId)
             {
                 return NotFound();
@@ -122,8 +107,8 @@ namespace InfoedukaMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "UserTypeId", "UserTypeId", appUser.UserTypeId);
-            var blUser = MappingAppUser.MapToBL(dbAppUser);
-            return View(blUser);
+            var appUserDto = AppUserMapper.MapToDTO(dbAppUser);
+            return View();
         }
 
         // GET: AppUsers/Delete/5

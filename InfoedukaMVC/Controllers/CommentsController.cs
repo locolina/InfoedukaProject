@@ -2,70 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InfoedukaMVC.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InfoedukaMVC.Models;
+using InfoedukaMVC.Models.DTO;
+using InfoedukaMVC.Services;
 
 namespace InfoedukaMVC.Controllers
 {
     public class CommentsController : Controller
     {
         private readonly LcolinaDbContext _context;
+        private readonly AuthService _authService;
 
-        public CommentsController(LcolinaDbContext context)
+        public CommentsController(LcolinaDbContext context, AuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
-
-        //TODO: KOD GETOVA TREBA VRACATI SAMO OBJAVE OD TRENUTNO PRIJAVLJENOG KORISNIKA, OSIM ZA ADMINA ONDA VRACAMO SVE
         
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-            var lcolinaDbContext = _context.Comments.Include(c => c.Class).Include(c => c.User);
+            var lcolinaDbContext = _context.Comments.Include(c => c.Course).Include(c => c.User);
             return View(await lcolinaDbContext.ToListAsync());
         }
-
-        // GET: Comments/Details/5
-        //TODO: PROVJERITI MISLIM DA JE ZA OVAJ APP NEPOTREBAN KOMAD KODA
-        // public async Task<IActionResult> Details(int? id)
-        // {
-        //     if (id == null || _context.Comments == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     var comment = await _context.Comments
-        //         .Include(c => c.Class)
-        //         .Include(c => c.User)
-        //         .FirstOrDefaultAsync(m => m.CommentId == id);
-        //     if (comment == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     return View(comment);
-        // }
 
         // GET: Comments/Create
         public IActionResult Create()
         {
-            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassName");
-            //TODO: KORISNIKA TREBA IZVUCI IS SESSIONA A NE GA RUCNO KUCATI KADA SE KREIRA NOVI KOMENTAR
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName");
             ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserName"); 
             return View();
         }
 
         // POST: Comments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CommentId,Title,Content,DatePosted,DateExpires,IsActive,UserId,ClassId")] Comment comment)
+        public async Task<IActionResult> Create([Bind("CommentId,Title,Content,DatePosted,DateExpires,IsActive,UserId,CourseId")] Comment comment)
         {
             ModelState.Remove("User");
-            ModelState.Remove("Class");
+            ModelState.Remove("Course");
 
             if (ModelState.IsValid)
             {
@@ -73,7 +51,7 @@ namespace InfoedukaMVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId", comment.ClassId);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", comment.CourseId);
             ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserId", comment.UserId);
             return View(comment);
         }
@@ -85,25 +63,21 @@ namespace InfoedukaMVC.Controllers
             {
                 return NotFound();
             }
-
             var comment = await _context.Comments.FindAsync(id);
             if (comment == null)
             {
                 return NotFound();
             }
-            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId", comment.ClassId);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", comment.CourseId);
             ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserId", comment.UserId);
             return View(comment);
         }
 
         // POST: Comments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CommentId,Title,Content,DatePosted,DateExpires,IsActive,UserId,ClassId")] BLComment comment)
+        public async Task<IActionResult> Edit(int id, [Bind("CommentId,Title,Content,DatePosted,DateExpires,IsActive,UserId,CourseId")] CommentsDTO comment)
         {
-            var dbComment = MappingComment.MapToDAL(comment);
+            var dbComment = CommentMapper.MapToDAL(comment);
             if (id != comment.CommentId)
             {
                 return NotFound();
@@ -129,10 +103,9 @@ namespace InfoedukaMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Classes, "ClassId", "ClassId", comment.ClassId);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", comment.CourseId);
             ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserId", comment.UserId);
-            var blComment = MappingComment.MapToBL(dbComment);
-            return View(blComment);
+            return View(comment);
         }
 
         // GET: Comments/Delete/5
@@ -144,7 +117,7 @@ namespace InfoedukaMVC.Controllers
             }
 
             var comment = await _context.Comments
-                .Include(c => c.Class)
+                .Include(c => c.Course)
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.CommentId == id);
             if (comment == null)

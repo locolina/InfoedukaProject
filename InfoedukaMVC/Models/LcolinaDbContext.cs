@@ -17,24 +17,22 @@ public partial class LcolinaDbContext : DbContext
 
     public virtual DbSet<AppUser> AppUsers { get; set; }
 
-    public virtual DbSet<Class> Classes { get; set; }
-
     public virtual DbSet<Comment> Comments { get; set; }
 
-    public virtual DbSet<UserClassMapping> UserClassMappings { get; set; }
+    public virtual DbSet<Course> Courses { get; set; }
+
+    public virtual DbSet<UserCourseMapping> UserCourseMappings { get; set; }
 
     public virtual DbSet<UserType> UserTypes { get; set; }
 
-    public virtual DbSet<VComment> VComments { get; set; }
-
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //    => optionsBuilder.UseSqlServer("InfoedukaDB");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:InfoedukaDB");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AppUser>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__AppUser__1788CC4CEDAB8457");
+            entity.HasKey(e => e.UserId).HasName("PK__AppUser__1788CC4C64681528");
 
             entity.ToTable("AppUser");
 
@@ -47,67 +45,67 @@ public partial class LcolinaDbContext : DbContext
             entity.HasOne(d => d.UserType).WithMany(p => p.AppUsers)
                 .HasForeignKey(d => d.UserTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__AppUser__UserTyp__208CD6FA");
-        });
-
-        modelBuilder.Entity<Class>(entity =>
-        {
-            entity.HasKey(e => e.ClassId).HasName("PK__Class__CB1927A0270D3E75");
-
-            entity.ToTable("Class");
-
-            entity.Property(e => e.ClassId).HasColumnName("ClassID");
-            entity.Property(e => e.ClassName).HasMaxLength(100);
+                .HasConstraintName("FK__AppUser__UserTyp__589C25F3");
         });
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.CommentId).HasName("PK__Comment__C3B4DFAA7B40D6CE");
+            entity.HasKey(e => e.CommentId).HasName("PK__Comment__C3B4DFAA86A62A0B");
 
             entity.ToTable("Comment");
 
             entity.Property(e => e.CommentId).HasColumnName("CommentID");
-            entity.Property(e => e.ClassId).HasColumnName("ClassID");
             entity.Property(e => e.Content).HasMaxLength(2500);
+            entity.Property(e => e.CourseId).HasColumnName("CourseID");
             entity.Property(e => e.DatePosted).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Title).HasMaxLength(250);
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            entity.HasOne(d => d.Class).WithMany(p => p.Comments)
-                .HasForeignKey(d => d.ClassId)
+            entity.HasOne(d => d.Course).WithMany(p => p.Comments)
+                .HasForeignKey(d => d.CourseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comment__ClassID__2180FB33");
+                .HasConstraintName("FK__Comment__CourseI__59904A2C");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comment__UserID__22751F6C");
+                .HasConstraintName("FK__Comment__UserID__5A846E65");
         });
 
-        modelBuilder.Entity<UserClassMapping>(entity =>
+        modelBuilder.Entity<Course>(entity =>
         {
-            entity.HasKey(e => e.UserClassMappingId).HasName("PK__UserClas__79A1E6E711CA25F9");
+            entity.HasKey(e => e.CourseId).HasName("PK__Course__C92D71878476D733");
 
-            entity.ToTable("UserClassMapping");
+            entity.ToTable("Course");
 
-            entity.Property(e => e.UserClassMappingId).HasColumnName("UserClassMappingID");
-            entity.Property(e => e.ClassId).HasColumnName("ClassID");
+            entity.Property(e => e.CourseId).HasColumnName("CourseID");
+            entity.Property(e => e.CourseName).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<UserCourseMapping>(entity =>
+        {
+            entity.HasKey(e => e.UserCourseMappingId).HasName("PK__UserCour__0C22E81FF701CEDB");
+
+            entity.ToTable("UserCourseMapping");
+
+            entity.Property(e => e.UserCourseMappingId).HasColumnName("UserCourseMappingID");
+            entity.Property(e => e.CourseId).HasColumnName("CourseID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            entity.HasOne(d => d.Class).WithMany(p => p.UserClassMappings)
-                .HasForeignKey(d => d.ClassId)
+            entity.HasOne(d => d.Course).WithMany(p => p.UserCourseMappings)
+                .HasForeignKey(d => d.CourseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserClass__Class__236943A5");
+                .HasConstraintName("FK__UserCours__Cours__5B78929E");
 
-            entity.HasOne(d => d.User).WithMany(p => p.UserClassMappings)
+            entity.HasOne(d => d.User).WithMany(p => p.UserCourseMappings)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserClass__UserI__245D67DE");
+                .HasConstraintName("FK__UserCours__UserI__5C6CB6D7");
         });
 
         modelBuilder.Entity<UserType>(entity =>
         {
-            entity.HasKey(e => e.UserTypeId).HasName("PK__UserType__40D2D8F63A74863B");
+            entity.HasKey(e => e.UserTypeId).HasName("PK__UserType__40D2D8F654311AE2");
 
             entity.ToTable("UserType");
 
@@ -115,19 +113,6 @@ public partial class LcolinaDbContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("UserTypeID");
             entity.Property(e => e.UserTypeName).HasMaxLength(50);
-        });
-
-        modelBuilder.Entity<VComment>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("vComment");
-
-            entity.Property(e => e.ClassName).HasMaxLength(100);
-            entity.Property(e => e.Content).HasMaxLength(2500);
-            entity.Property(e => e.FirstName).HasMaxLength(100);
-            entity.Property(e => e.LastName).HasMaxLength(100);
-            entity.Property(e => e.Title).HasMaxLength(250);
         });
 
         OnModelCreatingPartial(modelBuilder);

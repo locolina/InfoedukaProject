@@ -1,12 +1,12 @@
-﻿@model IEnumerable<InfoedukaMVC.Models.Class>
+﻿@model IEnumerable<InfoedukaMVC.Models.Course>
 
 @{
-    ViewData["Title"] = "Classes";
+    ViewData["Title"] = "Courses";
 }
 
 <div class="card">
     <div class="card-header">
-        <h3>Classes</h3>
+        <h3>Courses</h3>
         <a asp-action="Create" class="btn btn-primary" role="button">Create New</a>
     </div>
     <div class="card-body">
@@ -14,7 +14,7 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.ClassName)
+                        @Html.DisplayNameFor(model => model.CourseName)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.IsActive)
@@ -27,7 +27,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ClassName)
+                            @Html.DisplayFor(modelItem => item.CourseName)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.IsActive)
@@ -40,8 +40,8 @@
                                 </a>
 
                                 <ul class="dropdown-menu">
-                                    <li><a asp-action="Edit" asp-route-id="@item.ClassId" class="dropdown-item">Edit</a></li>
-                                    <li><a asp-action="Delete" asp-route-id="@item.ClassId" class="dropdown-item">Delete</a></li>
+                                    <li><a asp-action="Edit" asp-route-id="@item.CourseId" class="dropdown-item">Edit</a></li>
+                                    <li><a asp-action="Delete" asp-route-id="@item.CourseId" class="dropdown-item">Delete</a></li>
                                 </ul>
                             </div>
                         </td>
