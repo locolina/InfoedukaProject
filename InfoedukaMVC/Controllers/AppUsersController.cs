@@ -139,10 +139,17 @@ namespace InfoedukaMVC.Controllers
             {
                 return Problem("Entity set 'LcolinaDbContext.AppUsers'  is null.");
             }
-            var appUser = await _context.AppUsers.FindAsync(id);
-            if (appUser != null)
+            var appUser = await _context.AppUsers.FirstOrDefaultAsync(x=> x.UserId==id);
+            var userCourse = await _context.UserCourseMappings.FirstOrDefaultAsync(x => x.UserId == id);
+
+
+            if (userCourse !=null)
             {
+                _context.UserCourseMappings.Remove(userCourse);
+            }
+            if (appUser != null) { 
                 _context.AppUsers.Remove(appUser);
+            
             }
             
             await _context.SaveChangesAsync();

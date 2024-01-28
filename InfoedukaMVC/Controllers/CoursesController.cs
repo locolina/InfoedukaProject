@@ -111,13 +111,28 @@ namespace InfoedukaMVC.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Courses.FindAsync(id);
-            if (course != null)
+            var course = await _context.Courses.FirstOrDefaultAsync(x=>x.CourseId==id);
+            var userCourse = await _context.UserCourseMappings.FirstOrDefaultAsync(x => x.CourseId==id);
+            var comment= await _context.Comments.FirstOrDefaultAsync(x => x.CourseId == id);
+
+            if(userCourse != null )
             {
+                _context.UserCourseMappings.Remove(userCourse);
+            }
+            if (comment != null)
+            {
+                _context.Comments.Remove(comment);
+
+            }
+            if (course!=null)
+            {
+
                 _context.Courses.Remove(course);
             }
-            
-            await _context.SaveChangesAsync();
+
+         
+
+                await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
