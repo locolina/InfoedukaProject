@@ -68,8 +68,8 @@ namespace InfoedukaMVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId", comment.CourseId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserId", comment.UserId);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName", comment.CourseId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserName", comment.UserId);
             return View(comment);
         }
 
