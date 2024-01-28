@@ -79,6 +79,7 @@ public partial class LcolinaDbContext : DbContext
             entity.ToTable("Course");
 
             entity.Property(e => e.CourseId).HasColumnName("CourseID");
+
             entity.Property(e => e.CourseName).HasMaxLength(100);
         });
 
