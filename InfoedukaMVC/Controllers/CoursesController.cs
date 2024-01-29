@@ -2,11 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using InfoedukaMVC.Models;
 using InfoedukaMVC.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
+using System;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace InfoedukaMVC.Controllers
 {
     public class CoursesController : Controller
     {
+        
         private readonly LcolinaDbContext _context;
         private readonly AuthService _authService;
 
@@ -14,17 +19,39 @@ namespace InfoedukaMVC.Controllers
         {
             _context = context;
             _authService = authService;
+            
         }
 
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Courses.ToListAsync());
+            var currentUser = await GetCurrentUserAsync();
+
+            if (User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "RegularUser"))
+            {
+                // Regular user (teacher) can see only assigned courses
+                var assignedCourses = _context.UserCourseMappings
+                .Where(ucm => ucm.UserId == currentUser.UserId)
+                .Select(ucm => ucm.Course)
+                .ToList();
+
+
+                return View(assignedCourses);
+            }
+            else
+            {
+                var courses = await _context.Courses.ToListAsync();
+                return View(courses);
+            }
+
+
+
         }
 
         // GET: Courses/Create
         public IActionResult Create()
         {
+
             return View();
         }
 
@@ -129,16 +156,31 @@ namespace InfoedukaMVC.Controllers
 
                 _context.Courses.Remove(course);
             }
-
-         
-
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CourseExists(int id)
         {
-          return (_context.Courses?.Any(e => e.CourseId == id)).GetValueOrDefault();
+            return (_context.Courses?.Any(e => e.CourseId == id)).GetValueOrDefault();
+        }
+
+
+        private async Task<AppUser> GetCurrentUserAsync()
+        {
+            var username = User.FindFirstValue(ClaimTypes.Name);
+
+            if (!string.IsNullOrEmpty(username))
+            {
+                var currentUser = await _context.AppUsers.FirstOrDefaultAsync(u => u.UserName == username);
+                return currentUser;
+            }
+
+            return null;
         }
     }
+
+
 }
+
+

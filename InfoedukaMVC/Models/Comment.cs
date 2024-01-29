@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 
 namespace InfoedukaMVC.Models;
@@ -24,4 +25,6 @@ public partial class Comment
     public virtual Course Course { get; set; } = null!;
 
     public virtual AppUser User { get; set; } = null!;
+  
+    
 }
