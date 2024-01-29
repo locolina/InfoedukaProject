@@ -21,13 +21,9 @@ namespace InfoedukaMVC.Controllers
         {
             _context = context;
             _authService = authService;
-            IsUserLoggedIn();
+            
         }
 
-        private void IsUserLoggedIn()
-        {
-            ViewBag.SharedData = _authService.IsUserAuthenticated();
-        }
 
         // GET: AppUsers
         public async Task<IActionResult> Index()

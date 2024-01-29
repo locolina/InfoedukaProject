@@ -1,0 +1,36 @@
+﻿@model InfoedukaMVC.Models.AssignCourseViewModel
+
+@{
+    ViewData["Title"] = "Assign";
+}
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h3>Assign Course</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <form asp-action="Assign" method="post">
+                    <div class="form-group">
+                        <label asp-for="TeacherId" class="control-label">Select Teacher</label>
+                        <select asp-for="TeacherId" asp-items="@Model.TeacherList" class="form-control">
+                            <option value="">Select Teacher</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CourseId" class="control-label">Select Course</label>
+                        <select asp-for="CourseId" asp-items="@Model.CourseList" class="form-control">
+                            <option value="">Select Course</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Assign" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

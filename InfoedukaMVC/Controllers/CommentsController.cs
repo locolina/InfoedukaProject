@@ -22,10 +22,11 @@ namespace InfoedukaMVC.Controllers
             _context = context;
             _authService = authService;
         }
-        
+
         // GET: Comments
         public async Task<IActionResult> Index()
         {
+
             var lcolinaDbContext = _context.Comments.Include(c => c.Course).Include(c => c.User);
             return View(await lcolinaDbContext.ToListAsync());
         }
@@ -33,8 +34,23 @@ namespace InfoedukaMVC.Controllers
         // GET: Comments/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName");
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserName"); 
+            var currentUser = _context.AppUsers
+            .Include(u => u.UserCourseMappings)
+            .ThenInclude(ucm => ucm.Course)
+            .FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+            if (currentUser == null)
+            {
+                return NotFound(); 
+            }
+
+            
+            var userCourses = new SelectList(currentUser.UserCourseMappings
+                .Select(ucm => ucm.Course), "CourseId", "CourseName");
+
+            ViewData["CourseId"] = userCourses;
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserName");
+
             return View();
         }
 
@@ -142,14 +158,14 @@ namespace InfoedukaMVC.Controllers
             {
                 _context.Comments.Remove(comment);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CommentExists(int id)
         {
-          return (_context.Comments?.Any(e => e.CommentId == id)).GetValueOrDefault();
+            return (_context.Comments?.Any(e => e.CommentId == id)).GetValueOrDefault();
         }
     }
 }

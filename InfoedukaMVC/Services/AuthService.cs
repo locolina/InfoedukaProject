@@ -24,7 +24,7 @@ namespace InfoedukaMVC.Services
             _httpContextAccessor.HttpContext?.Session.Clear();
         }
 
-        public AppUser GetCurrentUser()
+        public AppUser GetCurrentUser(System.Security.Claims.ClaimsPrincipal user)
         {
             var userId = _httpContextAccessor.HttpContext?.Session.GetInt32("UserId");
             var userName = _httpContextAccessor.HttpContext?.Session.GetString("UserName");
@@ -38,10 +38,7 @@ namespace InfoedukaMVC.Services
             return null;
         }
 
-        public bool IsUserAuthenticated()
-        {
-            return _httpContextAccessor.HttpContext?.Session.GetInt32("UserId") != null;
-        }
+      
     }
 
 }

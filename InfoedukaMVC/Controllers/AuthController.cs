@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace InfoedukaMVC.Controllers
 {
@@ -78,13 +79,21 @@ namespace InfoedukaMVC.Controllers
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties).Wait();
+                
+                    return RedirectToAction("Index", "Home");
 
-                return RedirectToAction("Index", "Home"); // Redirect to the home page after successful login
+
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Invalid username or password";
+                return View();
             }
 
-            // Handle invalid credentials
-            return View();
+            
         }
+
+         
         public IActionResult Signout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
@@ -92,4 +101,5 @@ namespace InfoedukaMVC.Controllers
         }
 
     }
+     
 }
