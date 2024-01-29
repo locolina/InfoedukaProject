@@ -27,7 +27,7 @@ public class CommentMapper
             CommentId = comment.CommentId,
             Title = comment.Title,
             Content = comment.Content,
-            DatePosted = comment.DatePosted,
+            DatePosted = DateTime.UtcNow,
             DateExpires = comment.DateExpires,
             IsActive = comment.IsActive,
             UserId = comment.UserId,

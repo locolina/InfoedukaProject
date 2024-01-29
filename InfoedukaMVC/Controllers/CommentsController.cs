@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using InfoedukaMVC.Models;
 using InfoedukaMVC.Models.DTO;
 using InfoedukaMVC.Services;
+using System.ComponentModel.Design;
 
 namespace InfoedukaMVC.Controllers
 {
@@ -90,9 +91,13 @@ namespace InfoedukaMVC.Controllers
         }
 
         // POST: Comments/Edit/5
+        //[Bind("CommentId,Title,Content,DatePosted,DateExpires,IsActive,UserId,CourseId")]
         [HttpPost]
         public async Task<IActionResult> Edit(int id, [Bind("CommentId,Title,Content,DatePosted,DateExpires,IsActive,UserId,CourseId")] CommentsDTO comment)
         {
+           
+            
+
             var dbComment = CommentMapper.MapToDAL(comment);
             if (id != comment.CommentId)
             {
@@ -103,12 +108,12 @@ namespace InfoedukaMVC.Controllers
             {
                 try
                 {
-                    _context.Update(comment);
+                    _context.Update(dbComment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CommentExists(comment.CommentId))
+                    if (!CommentExists(dbComment.CommentId))
                     {
                         return NotFound();
                     }
