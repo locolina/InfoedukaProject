@@ -25,7 +25,7 @@ namespace InfoedukaMVC.Controllers
                 var teachers = _context.AppUsers.Where(u => u.UserTypeId == 2).ToList();
                 var teacherList = new SelectList(teachers, "UserId", "UserName");
 
-                var courses = await _context.Courses.ToListAsync(); // Use async method here
+                var courses = await _context.Courses.ToListAsync(); 
                 var courseList = new SelectList(courses, "CourseId", "CourseName");
 
                 var viewModel = new AssignCourseViewModel
