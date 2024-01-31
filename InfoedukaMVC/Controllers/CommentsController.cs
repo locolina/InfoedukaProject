@@ -10,6 +10,7 @@ using InfoedukaMVC.Models;
 using InfoedukaMVC.Models.DTO;
 using InfoedukaMVC.Services;
 using System.ComponentModel.Design;
+using System.Security.Claims;
 
 namespace InfoedukaMVC.Controllers
 {
@@ -35,6 +36,7 @@ namespace InfoedukaMVC.Controllers
         // GET: Comments/Create
         public IActionResult Create()
         {
+
             var currentUser = _context.AppUsers
             .Include(u => u.UserCourseMappings)
             .ThenInclude(ucm => ucm.Course)
@@ -50,7 +52,19 @@ namespace InfoedukaMVC.Controllers
                 .Select(ucm => ucm.Course), "CourseId", "CourseName");
 
             ViewData["CourseId"] = userCourses;
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserName");
+            if (User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Admin"))
+            {
+                ViewData["UserId"] = new SelectList(_context.AppUsers, "UserId", "UserName");
+
+               
+                ViewData["AllCourses"] = new SelectList(_context.Courses, "CourseId", "CourseName");
+
+            }
+            else
+            {
+                ViewData["UserId"] = new SelectList(_context.AppUsers
+                    .Where(u => u.UserName == User.Identity.Name), "UserId", "UserName");
+            }
 
             return View();
         }

@@ -17,6 +17,7 @@ namespace InfoedukaMVC.Controllers
             _context = context;
             _authService = authService;
         }
+       
         public async Task<IActionResult> AssignAsync()
         {
             if (User.HasClaim(c => c.Value == "Admin"))
@@ -25,7 +26,7 @@ namespace InfoedukaMVC.Controllers
                 var teachers = _context.AppUsers.Where(u => u.UserTypeId == 2).ToList();
                 var teacherList = new SelectList(teachers, "UserId", "UserName");
 
-                var courses = await _context.Courses.ToListAsync(); // Use async method here
+                var courses = await _context.Courses.ToListAsync(); 
                 var courseList = new SelectList(courses, "CourseId", "CourseName");
 
                 var viewModel = new AssignCourseViewModel
@@ -39,7 +40,7 @@ namespace InfoedukaMVC.Controllers
 
 
 
-            return RedirectToAction("Unauthorized", "Home");
+            return View();
         }
         // POST: Courses/Assign
         [HttpPost]
@@ -75,8 +76,9 @@ namespace InfoedukaMVC.Controllers
                 {
                     // The teacher is already assigned to the course, handle accordingly
                     TempData["ErrorMessage"] = "The teacher is already assigned to this course.";
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Assign));
                 }
+              
 
                 // Assign the course to the teacher
                 var newUserCourseMapping = new UserCourseMapping
@@ -87,16 +89,11 @@ namespace InfoedukaMVC.Controllers
 
                 _context.UserCourseMappings.Add(newUserCourseMapping);
                 await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                // Redirect to an unauthorized page or display an error
-                TempData["ErrorMessage"] = "Unauthorized access.";
-                return RedirectToAction("Unauthorized", "Home");
+                
             }
 
+            TempData["SuccessMessage"] = "The teacher is assigned to this course.";
+            return RedirectToAction(nameof(Assign));
 
         }
         private async Task<AppUser> GetCurrentUserAsync()
